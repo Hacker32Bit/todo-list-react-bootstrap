@@ -4,7 +4,7 @@ import { Pencil, Trash3, InfoCircleFill, HourglassSplit } from "react-bootstrap-
 export default function TodoListItem() {
   return (
     <ListGroup.Item>
-      <Row className="justify-content-start">
+      <Row className="justify-content-start d-flex align-items-center">
         <Col md="auto">
           <Form>
             <Form.Check type="checkbox" id="default-checkbox" label="" />

@@ -5,6 +5,8 @@ export default function TodoList(){
     return(<>
         <ListGroup>
             <TodoListItem />
+            <TodoListItem />
+            <TodoListItem />
         </ListGroup>
     </>)
 }
