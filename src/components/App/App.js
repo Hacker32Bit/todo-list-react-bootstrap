@@ -128,9 +128,29 @@ export default function App() {
   };
 
   const visibleItems = () => {
+
+    let filteredArr = items
+
+    switch (filterSelected) {
+      case "Important":
+        filteredArr = filteredArr.filter((el) => el.important)
+        break
+      case "Done":
+        filteredArr = filteredArr.filter((el) => el.done)
+        break
+      case "Less than 5 days":
+        filteredArr = filteredArr.filter((el) => el.date.getTime() - new Date().getTime() <= 432000000 && el.date.getTime() - new Date().getTime() > 1)
+        break
+      case "Time expired":
+        filteredArr = filteredArr.filter((el) => new Date().getTime() - el.date.getTime() > 0 && !el.done)
+        break
+      default:
+        break
+    }
+
     switch (sortSelected) {
       case "Alphabet":
-        return items.sort(function (a, b) {
+        return filteredArr.sort(function (a, b) {
           if (a.text < b.text) {
             return !isAscending;
           }
@@ -140,12 +160,14 @@ export default function App() {
           return 0;
         });
       case "Deadline date":
-        return items.sort(function (a, b) {
+        return filteredArr.sort(function (a, b) {
           return isAscending ? a.date - b.date : b.date - a.date;
         });
       default:
-        return items;
+        return filteredArr
     }
+
+    
   };
 
   const sortElemBy = () => {
