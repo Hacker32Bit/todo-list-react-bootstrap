@@ -31,12 +31,16 @@ export default function TodoListItem(props) {
     "Dec",
   ];
 
-  const handleCheckBox = (event) => {
-    console.log(event.target.checked);
+  const handleCheckBox = () => {
+    props.onDone(props.id)
   };
 
   const onImportant = () => {
     props.onImportant(props.id)
+  }
+
+  const deleteItem = () => {
+    props.deleteItem(props.id)
   }
 
   const currentDay = new Date();
@@ -99,7 +103,7 @@ export default function TodoListItem(props) {
                   <Button variant="primary">
                     <Pencil />
                   </Button>
-                  <Button variant="danger">
+                  <Button variant="danger" onClick={deleteItem}>
                     <Trash3 />
                   </Button>
                 </ButtonGroup>
