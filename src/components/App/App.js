@@ -58,6 +58,10 @@ export default function App() {
     },
   ]);
 
+  const [isAscending, setIsAscending] = useState(true);
+  const [filterSelected, setFilterSelected] = useState("All");
+  const [sortSelected, setSortSelected] = useState("Alphabet");
+
   const onAddItem = (text, date) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
 
@@ -121,7 +125,40 @@ export default function App() {
 
       return [...items.slice(0, idx), newItem, ...items.slice(idx + 1)];
     });
-  }
+  };
+
+  const visibleItems = () => {
+    switch (sortSelected) {
+      case "Alphabet":
+        return items.sort(function (a, b) {
+          if (a.text < b.text) {
+            return !isAscending;
+          }
+          if (a.text > b.text) {
+            return isAscending;
+          }
+          return 0;
+        });
+      case "Deadline date":
+        return items.sort(function (a, b) {
+          return isAscending ? a.date - b.date : b.date - a.date;
+        });
+      default:
+        return items;
+    }
+  };
+
+  const sortElemBy = () => {
+    setIsAscending((prevState) => !prevState);
+  };
+
+  const onFilter = (value) => {
+    setFilterSelected(value);
+  };
+
+  const onSort = (value) => {
+    setSortSelected(value);
+  };
 
   return (
     <Container className="main">
@@ -133,8 +170,21 @@ export default function App() {
             className="my-4"
             style={{ borderBottom: "1px solid #B0BEC5" }}
           ></Container>
-          <Filter />
-          <TodoList items={items} onImportant={onImportant} onDone={onDone} deleteItem={deleteItem} onEdit={onEdit}/>
+          <Filter
+            filterSelected={filterSelected}
+            sortSelected={sortSelected}
+            isAscending={isAscending}
+            onFilter={onFilter}
+            onSort={onSort}
+            sortElemBy={sortElemBy}
+          />
+          <TodoList
+            items={visibleItems()}
+            onImportant={onImportant}
+            onDone={onDone}
+            deleteItem={deleteItem}
+            onEdit={onEdit}
+          />
         </Col>
       </Row>
     </Container>
