@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Row,
   Col,
@@ -7,6 +8,8 @@ import {
   Button,
   ButtonGroup,
   Alert,
+  InputGroup,
+
 } from "react-bootstrap";
 import {
   Pencil,
@@ -15,9 +18,23 @@ import {
   HourglassSplit,
   JournalCheck,
   ClockHistory,
+  Calendar3,
+  CheckCircleFill,
 } from "react-bootstrap-icons";
+import Calendar from "react-calendar";
+
+import { validateInput } from "../../../utils/validator";
+import ErrorMessages from "../../ErrorMessage";
 
 export default function TodoListItem(props) {
+
+  const [isEdit, setIsEdit] = useState(false)
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [calendarValue, setCalendarValue] = useState(props.date);
+  const [inputValue, setInputValue] = useState(props.text);
+  const [isError, setIsError] = useState(false);
+  const [errorMessages, setErrorMessages] = useState([])
+
   const monthNames = [
     "Jan",
     "Feb",
@@ -45,6 +62,10 @@ export default function TodoListItem(props) {
     props.deleteItem(props.id);
   };
 
+  const onEdit = () => {
+    setIsEdit((prevState) => !prevState)
+  }
+
   const currentDay = new Date();
   const isDeadline =
     props.date.getTime() - currentDay.getTime() <= 432000000 ? true : false;
@@ -60,8 +81,70 @@ export default function TodoListItem(props) {
     props.date.getFullYear(),
   ].join(" ");
 
+
+  const onCalendar = () => {
+    setShowCalendar((prevState) => !prevState);
+  };
+
+  const onCalendarChange = (date) => {
+    setCalendarValue(date);
+  };
+
+  const onInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const onBtnClick = () => {
+    setShowCalendar(false)
+
+    if (!validateInput(inputValue)) {
+      setErrorMessages((prevState) => { return [...prevState, "Input must have more than 2 bymbols!"]})
+      setIsError(true);
+      return
+    }
+
+    props.onEdit(props.id, inputValue, calendarValue)
+
+    setIsError(false)
+    setIsEdit(false)
+    setErrorMessages([])
+  };
+
+
   return (
+    
     <ListGroup.Item>
+      { isEdit ? (
+        <>
+        <InputGroup size="lg" className="mt-4">
+          <Form.Control
+            aria-label="Add item..."
+            aria-describedby="basic-addon2"
+            value={inputValue}
+            onChange={onInputChange}
+          />
+          <Button variant="secondary" onClick={onCalendar}>
+            <Calendar3 />
+          </Button>
+          <Button variant="primary" id="button-addon2" onClick={onBtnClick}>
+            <CheckCircleFill />
+          </Button>
+        </InputGroup>
+        {showCalendar ? (
+          <Container
+            className="d-flex justify-content-end"
+            style={{
+              position: "absolute",
+              zIndex: 9999,
+              marginLeft: "-92px",
+            }}
+          >
+            <Calendar onChange={onCalendarChange} value={calendarValue} />
+          </Container>
+        ) : null}
+        {isError ? <ErrorMessages errorMessages={errorMessages} /> : null}
+      </>
+      ) : (
       <Row className="justify-content-start d-flex align-items-center">
         <Col md="auto">
           <Form>
@@ -110,7 +193,7 @@ export default function TodoListItem(props) {
             <Row>
               <Col>
                 <ButtonGroup aria-label="First group">
-                  <Button variant="primary">
+                  <Button variant="primary" onClick={onEdit}>
                     <Pencil />
                   </Button>
                   <Button variant="danger" onClick={deleteItem}>
@@ -135,7 +218,7 @@ export default function TodoListItem(props) {
             </Row>
           </Container>
         </Col>
-      </Row>
+      </Row> ) }
     </ListGroup.Item>
   );
 }

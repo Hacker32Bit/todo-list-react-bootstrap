@@ -109,6 +109,20 @@ export default function App() {
     });
   };
 
+  const onEdit = (id, text, date) => {
+    setItems((items) => {
+      const idx = items.findIndex((el) => el.id === id);
+
+      const newItem = {
+        ...items[idx],
+        text,
+        date,
+      };
+
+      return [...items.slice(0, idx), newItem, ...items.slice(idx + 1)];
+    });
+  }
+
   return (
     <Container className="main">
       <Row className="main">
@@ -120,7 +134,7 @@ export default function App() {
             style={{ borderBottom: "1px solid #B0BEC5" }}
           ></Container>
           <Filter />
-          <TodoList items={items} onImportant={onImportant} onDone={onDone} deleteItem={deleteItem} />
+          <TodoList items={items} onImportant={onImportant} onDone={onDone} deleteItem={deleteItem} onEdit={onEdit}/>
         </Col>
       </Row>
     </Container>
