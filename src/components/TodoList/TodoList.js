@@ -12,6 +12,7 @@ export default function TodoList({ items }) {
               important={item.important}
               done={item.done}
               date={item.date}
+              doneDate={item.doneDate}
               key={item.id}
             />
           );

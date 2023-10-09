@@ -31,30 +31,54 @@ export default function TodoListItem(props) {
   ];
 
   const handleCheckBox = (event) => {
-    console.log(event.target.checked)
-  }
+    console.log(event.target.checked);
+  };
+
+  const currentDay = new Date();
+  const isDeadline =
+    props.date.getTime() - currentDay.getTime() <= 432000000 ? true : false;
+  const deadlineVariant = props.done
+    ? "outline-success"
+    : props.date.getTime() - currentDay.getTime() < 0
+    ? "outline-danger"
+    : "outline-warning";
+
+  const deadlineDate = [
+    props.date.getDate(),
+    monthNames[props.date.getMonth()],
+    props.date.getFullYear(),
+  ].join(" ");
 
   return (
     <ListGroup.Item>
       <Row className="justify-content-start d-flex align-items-center">
         <Col md="auto">
           <Form>
-            <Form.Check type="checkbox" id="default-checkbox" checked={props.done} onChange={handleCheckBox} label="" />
+            <Form.Check
+              type="checkbox"
+              id="default-checkbox"
+              checked={props.done}
+              onChange={handleCheckBox}
+              label=""
+            />
           </Form>
         </Col>
         <Col>{props.text}</Col>
-        <Col xs lg="2">
-          <Container className="d-flex justify-content-end">
-            <Button variant="outline-warning">
-              <HourglassSplit />{" "}
-              {[
-                props.date.getDate(),
-                monthNames[props.date.getMonth()],
-                props.date.getFullYear(),
-              ].join(" ")}
-            </Button>
-          </Container>
-        </Col>
+        {isDeadline || props.done ? (
+          <Col xs lg="2">
+            <Container className="d-flex justify-content-end">
+              <Button variant={deadlineVariant}>
+                <HourglassSplit />{" "}
+                {props.done
+                  ? [ props.doneDate.getDate(),
+                      monthNames[props.doneDate.getMonth()],
+                      props.doneDate.getFullYear(),
+                    ].join(" ")
+                  : deadlineDate}
+              </Button>
+            </Container>
+          </Col>
+        ) : null}
         <Col xs lg="2">
           <Container className="d-flex justify-content-end">
             <Row>
