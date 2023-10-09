@@ -13,6 +13,8 @@ import {
   Trash3,
   InfoCircleFill,
   HourglassSplit,
+  JournalCheck,
+  ClockHistory,
 } from "react-bootstrap-icons";
 
 export default function TodoListItem(props) {
@@ -32,16 +34,16 @@ export default function TodoListItem(props) {
   ];
 
   const handleCheckBox = () => {
-    props.onDone(props.id)
+    props.onDone(props.id);
   };
 
   const onImportant = () => {
-    props.onImportant(props.id)
-  }
+    props.onImportant(props.id);
+  };
 
   const deleteItem = () => {
-    props.deleteItem(props.id)
-  }
+    props.deleteItem(props.id);
+  };
 
   const currentDay = new Date();
   const isDeadline =
@@ -74,7 +76,9 @@ export default function TodoListItem(props) {
         </Col>
         <Col onClick={onImportant}>
           {props.important ? (
-            <Alert className="my-0" variant="danger">{props.text}</Alert>
+            <Alert className="my-0" variant="danger">
+              {props.text}
+            </Alert>
           ) : (
             props.text
           )}
@@ -83,7 +87,13 @@ export default function TodoListItem(props) {
           <Col xs lg="2">
             <Container className="d-flex justify-content-end">
               <Button variant={deadlineVariant}>
-                <HourglassSplit />{" "}
+                {props.done ? (
+                  <JournalCheck />
+                ) : deadlineVariant === "outline-warning" ? (
+                  <ClockHistory />
+                ) : (
+                  <HourglassSplit />
+                )}{" "}
                 {props.done
                   ? [
                       props.doneDate.getDate(),
