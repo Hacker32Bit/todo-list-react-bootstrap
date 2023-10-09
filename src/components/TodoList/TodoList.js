@@ -1,7 +1,8 @@
 import { ListGroup } from "react-bootstrap";
 import TodoListItem from "./TodoListItem/TodoListItem";
 
-export default function TodoList({ items }) {
+export default function TodoList({ items, onImportant }) {
+
   return (
     <>
       <ListGroup>
@@ -13,6 +14,8 @@ export default function TodoList({ items }) {
               done={item.done}
               date={item.date}
               doneDate={item.doneDate}
+              id={item.id}
+              onImportant={onImportant}
               key={item.id}
             />
           );

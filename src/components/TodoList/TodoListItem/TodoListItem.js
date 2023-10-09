@@ -6,6 +6,7 @@ import {
   Container,
   Button,
   ButtonGroup,
+  Alert,
 } from "react-bootstrap";
 import {
   Pencil,
@@ -33,6 +34,10 @@ export default function TodoListItem(props) {
   const handleCheckBox = (event) => {
     console.log(event.target.checked);
   };
+
+  const onImportant = () => {
+    props.onImportant(props.id)
+  }
 
   const currentDay = new Date();
   const isDeadline =
@@ -63,14 +68,21 @@ export default function TodoListItem(props) {
             />
           </Form>
         </Col>
-        <Col>{props.text}</Col>
+        <Col onClick={onImportant}>
+          {props.important ? (
+            <Alert className="my-0" variant="danger">{props.text}</Alert>
+          ) : (
+            props.text
+          )}
+        </Col>
         {isDeadline || props.done ? (
           <Col xs lg="2">
             <Container className="d-flex justify-content-end">
               <Button variant={deadlineVariant}>
                 <HourglassSplit />{" "}
                 {props.done
-                  ? [ props.doneDate.getDate(),
+                  ? [
+                      props.doneDate.getDate(),
                       monthNames[props.doneDate.getMonth()],
                       props.doneDate.getFullYear(),
                     ].join(" ")
